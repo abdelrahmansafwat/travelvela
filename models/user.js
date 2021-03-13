@@ -11,7 +11,7 @@ let userSchema = new Schema({
     password: { type: String, required: true },
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
-    privilege: { type: Number, default: 0 },
+    privilege: { type: Number, default: 1 },
     phone: { type: String, required: true },
     wallet: { type: Number },
     address: { type: String, required: true }

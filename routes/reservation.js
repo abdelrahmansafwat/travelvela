@@ -275,6 +275,24 @@ router.get('/all', async (req, res) => {
   })
 });
 
+//All reservations for specific user route
+router.post('/all/specific-user', async (req, res) => {
+  console.log(req.body);
+  reservationModel.find({ "passengers.email" : req.body.email }, (err, data) => {
+      if (err) {
+          res.status(500).json({
+            message: err.message,
+          });
+          return;
+      }
+      //dataWithoutPasswords = data.map(x => _.omit(x, 'password'))
+      res.status(200).json({
+          message: "Retrieved all reservations",
+          reservations: data,
+      });
+  })
+});
+
 //Reserve status route
 router.post("/reserve/status", async (req, res) => {
   console.log(req.body);
