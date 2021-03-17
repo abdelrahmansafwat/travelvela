@@ -120,6 +120,17 @@ router.post("/find", async (req, res) => {
   });
 });
 
+//Delete route
+router.post("/delete", async (req, res) => {
+  reservationModel.deleteOne({ _id: req.body._id }, function (err) {
+    if (err) {
+      res.status(500).json({
+        message: err.message,
+      });
+    }
+  });
+});
+
 //Reserve route
 router.post("/reserve", async (req, res) => {
   console.log(req.body);

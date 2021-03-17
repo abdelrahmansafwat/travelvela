@@ -14,7 +14,6 @@ let userSchema = new Schema({
     privilege: { type: Number, default: 1 },
     phone: { type: String, required: true },
     wallet: { type: Number },
-    address: { type: String, required: true }
 });
 
 userSchema.pre("save", async function(next){

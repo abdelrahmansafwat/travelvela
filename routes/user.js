@@ -37,6 +37,9 @@ router.post("/login", async (req, res) => {
           res.status(200).json({
             privilege: data.privilege,
             email: data.email,
+            firstName: data.firstName,
+            lastName: data.lastName,
+            userId: data._id,
             accessToken: accessToken,
           });
         }
@@ -241,6 +244,27 @@ router.post("/update-password", async (req, res) => {
       });
     }
   );
+});
+
+//User privilege route
+router.post("/privilege", async (req, res) => {
+  console.log(req.body);
+  userModel.findOneAndUpdate(
+    { email: req.body.email },
+    {
+      privilege: req.body.privilege
+    },
+    (err, data) => {
+      if (err) {
+        res.status(500).json({
+          message: err.message,
+        });
+        return;
+      }
+      res.json({
+        privilege: data.privilege,
+      });
+    });
 });
 
 module.exports = router;

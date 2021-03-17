@@ -25,6 +25,7 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.11.17",
     "mongoose-fuzzy-searching": "^2.0.2",
+    "mongoose-sequence": "^5.3.1",
     "sslcommerz-nodejs": "^1.0.8",
     "underscore": "^1.12.0",
     "uuid": "^8.3.2"
