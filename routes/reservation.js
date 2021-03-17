@@ -21,12 +21,12 @@ router.post("/find", async (req, res) => {
   var birmanUrl = "http://api.tktbd.com/api/birman";
   var flynovoairUrl = "http://api.tktbd.com/api/flynovoair";
   var usbairUrl = "http://api.tktbd.com/api/usbair";
-  var intapiUrl = "http://api.tktbd.com/api/intapi";
+  //var intapiUrl = "http://api.tktbd.com/api/intapi";
 
   var birmanData = null;
   var flynovoairData = null;
   var usbairData = null;
-  var intapiData = null;
+  //var intapiData = null;
 
   await axios
     .post(birmanUrl, {
@@ -91,6 +91,7 @@ router.post("/find", async (req, res) => {
       }
     });
 
+    /*
     await axios
     .post(intapiUrl, {
       departure_code: req.body.departure_code,
@@ -111,12 +112,13 @@ router.post("/find", async (req, res) => {
       if (error) {
       }
     });
+    */
 
   res.status(200).json({
     flynovoair: flynovoairData,
     birman: birmanData,
     usbair: usbairData,
-    intapi: intapiData,
+    //intapi: intapiData,
   });
 });
 
