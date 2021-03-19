@@ -18,7 +18,8 @@ let reservationSchema = new Schema({
     details: { type: [Schema.Types.Mixed] },
     total: { type: Number, required: true },
     numberOfTickets: { type: Number, required: true },
-    status: { type: String }
+    status: { type: String },
+    pnr: { type: String },
 });
 
 reservationSchema.plugin(AutoIncrement, {inc_field: 'ref', start_seq: 1});

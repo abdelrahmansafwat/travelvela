@@ -327,4 +327,25 @@ router.post("/reserve/status", async (req, res) => {
     });
 });
 
+//Reserve status route
+router.post("/reserve/pnr", async (req, res) => {
+  console.log(req.body);
+  reservationModel.findOneAndUpdate(
+    { reservationId: req.body.reservationId },
+    {
+      pnr: req.body.pnr
+    },
+    (err, data) => {
+      if (err) {
+        res.status(500).json({
+          message: err.message,
+        });
+        return;
+      }
+      res.json({
+        data,
+      });
+    });
+});
+
 module.exports = router;
