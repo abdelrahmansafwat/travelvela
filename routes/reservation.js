@@ -21,12 +21,12 @@ router.post("/find", async (req, res) => {
   var birmanUrl = "http://api.tktbd.com/api/birman";
   var flynovoairUrl = "http://api.tktbd.com/api/flynovoair";
   var usbairUrl = "http://api.tktbd.com/api/usbair";
-  //var intapiUrl = "http://api.tktbd.com/api/intapi";
+  var intapiUrl = "http://api.tktbd.com/api/intapi";
 
   var birmanData = null;
   var flynovoairData = null;
   var usbairData = null;
-  //var intapiData = null;
+  var intapiData = null;
 
   await axios
     .post(birmanUrl, {
@@ -91,7 +91,6 @@ router.post("/find", async (req, res) => {
       }
     });
 
-    /*
     await axios
     .post(intapiUrl, {
       departure_code: req.body.departure_code,
@@ -112,13 +111,12 @@ router.post("/find", async (req, res) => {
       if (error) {
       }
     });
-    */
 
   res.status(200).json({
     flynovoair: flynovoairData,
     birman: birmanData,
     usbair: usbairData,
-    //intapi: intapiData,
+    intapi: intapiData,
   });
 });
 
@@ -128,6 +126,11 @@ router.post("/delete", async (req, res) => {
     if (err) {
       res.status(500).json({
         message: err.message,
+      });
+    }
+    else {
+      res.status(200).json({
+        message: "Deleted",
       });
     }
   });
@@ -171,7 +174,22 @@ router.post("/reserve", async (req, res) => {
       console.log(error);
     });
 
+  var ref = Math.floor(Math.random() * 1000000);
+  var duplicate = true;
+
+  while(duplicate){
+    await reservationModel.find({ ref: ref }, function (err, docs) {
+      //console.log("Checking if email exists...");
+      if (docs.length) {
+        ref = Math.floor(Math.random() * 1000000);
+      } else {
+        duplicate = false;
+      }
+    });
+  }
+
   let newReservation = new reservationModel({
+    ref: ref,
     email: req.body.email,
     passengers: req.body.passengers,
     selectedGoingTicket: req.body.selectedGoingTicket,
@@ -201,9 +219,82 @@ router.post("/reserve", async (req, res) => {
   });
 });
 
+//Reserve alternative route
+router.post("/reserve-alt", async (req, res) => {
+  console.log(req.body);
+
+  let transactionId = uuidv4();
+
+  var ref = Math.floor(Math.random() * 1000000);
+  var duplicate = true;
+
+  while(duplicate){
+    await reservationModel.find({ ref: ref }, function (err, docs) {
+      //console.log("Checking if email exists...");
+      if (docs.length) {
+        ref = Math.floor(Math.random() * 1000000);
+      } else {
+        duplicate = false;
+      }
+    });
+  }
+
+  let newReservation = new reservationModel({
+    ref: ref,
+    email: req.body.email,
+    passengers: req.body.passengers,
+    selectedGoingTicket: req.body.selectedGoingTicket,
+    selectedReturningTicket: req.body.selectedReturningTicket,
+    oneWay: req.body.oneWay,
+    departureDate: req.body.departureDate,
+    arrivalDate: req.body.arrivalDate,
+    reservationId: transactionId,
+    total: req.body.total,
+    numberOfTickets: req.body.numberOfTickets,
+    status: "Pending",
+    payment: JSON.parse(req.body.payment)
+  });
+
+  newReservation.save(function(err, data) {
+    if (err) {
+      res.status(500).json({
+        message: err.message,
+      });
+      return;
+    }
+    res.status(200).json({
+      message: "OK"
+    });
+  });
+});
+
+//Validate route
+router.post("/validate", async (req, res) => {
+  console.log(req.body);
+
+  await sslcommerz
+    .validate_transaction_order(req.body.validation_id)
+    .then(function(response) {
+      console.log(response);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+});
+
 //Reserve success route
 router.post("/reserve/success", async (req, res) => {
   console.log(req.body);
+
+  await sslcommerz
+    .validate_transaction_order(req.body.val_id)
+    .then(function(response) {
+      console.log(response);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+
   reservationModel.findOneAndUpdate(
     { reservationId: req.body.tran_id },
     {
@@ -346,6 +437,11 @@ router.post("/reserve/pnr", async (req, res) => {
         data,
       });
     });
+});
+
+//Reserve status route
+router.post("/reserve/print", async (req, res) => {
+  
 });
 
 module.exports = router;

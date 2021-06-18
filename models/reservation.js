@@ -20,9 +20,10 @@ let reservationSchema = new Schema({
     numberOfTickets: { type: Number, required: true },
     status: { type: String },
     pnr: { type: String },
+    payment: { type: Schema.Types.Mixed },
 });
 
-reservationSchema.plugin(AutoIncrement, {inc_field: 'ref', start_seq: 1});
+//reservationSchema.plugin(AutoIncrement, {inc_field: 'ref', start_seq: 1});
 
 let reservationModel = mongoose.model("reservation", reservationSchema);
 

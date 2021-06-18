@@ -169,6 +169,22 @@ router.post("/update", async (req, res) => {
   );
 });
 
+//Delete route
+router.post("/delete", async (req, res) => {
+  userModel.deleteOne({ _id: req.body._id }, function (err) {
+    if (err) {
+      res.status(500).json({
+        message: err.message,
+      });
+    }
+    else {
+      res.status(200).json({
+        message: "Deleted",
+      });
+    }
+  });
+});
+
 //Forgot user password route
 router.post("/forgot-password", async (req, res) => {
   console.log(req.body);
